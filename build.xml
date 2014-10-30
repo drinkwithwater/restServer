@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="orion" default="main" >
+  <patternset id="lib">
+    <include name="jetty-all-7.jar"/>
+    <include name="servlet-api-2.5.jar"/>
+  </patternset>
+  <path id="classpath">
+    <fileset dir="lib">
+      <patternset refid="lib"/>
+    </fileset>
+  </path>
+  <target name="compile">
+    <delete dir="target"/>
+    <mkdir dir="target/classes"/>
+    <javac srcdir="src" destdir="target/classes" classpathref="classpath"/>
+  </target>
+  <target name="main" depends="compile">
+    <jar destfile="target/root.jar" basedir="target/classes">
+      <manifest>
+		<attribute name="Main-class" value="main.WebServlet"/>
+      </manifest>
+      <zipgroupfileset dir="lib/">
+        <patternset refid="lib"/>
+      </zipgroupfileset>
+    </jar>
+  </target>
+  <target name="clean">
+    <delete dir="target"/>
+  </target>
+  <target name="test">
+    <echo message="building main in ${basedir}"/>
+  </target>
+</project>
+

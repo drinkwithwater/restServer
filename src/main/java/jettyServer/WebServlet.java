@@ -1,10 +1,7 @@
-package main;
-
+package jettyServer;
+//dependency: jetty-all-7.jar, servlet-api-2.5.jar
 
 import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -19,7 +16,8 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
+import org.json.JSONException;
+import org.json.JSONObject;
 
 @SuppressWarnings("serial")
 public class WebServlet extends HttpServlet {
@@ -43,8 +41,49 @@ public class WebServlet extends HttpServlet {
 	}
 
 
+	@Override
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=utf-8"); // 加上此行代码，避免出现中文乱码
+		response.setStatus(HttpServletResponse.SC_OK);
+		PrintWriter writer = response.getWriter();
+
+        BufferedReader br=new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String s="";
+        StringBuilder sb=new StringBuilder();
+        while(s!=null){
+        	s=br.readLine();
+        	if(s==null) break;
+        	else sb.append(s);
+        	log.info(s);
+        }
+		writer.write("recv: "+sb.toString());
+		writer.flush();
+	}
+
+	@Override
+	protected void doDelete(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=utf-8"); // 加上此行代码，避免出现中文乱码
+		response.setStatus(HttpServletResponse.SC_OK);
+		PrintWriter writer = response.getWriter();
+
+		String uri = request.getRequestURI();
+        uri = uri.substring(1);
+        log.info(uri);
+        BufferedReader br=new BufferedReader(new InputStreamReader(request.getInputStream()));
+        String s="";
+        while(s!=null){
+        	s=br.readLine();
+        	if(s==null) break;
+        	log.info(s);
+        }
+        writer.println("nothing");
+        writer.flush();
+	}
+
 	public void mainProc() throws Exception {
-		Server server = new Server(8081);
+		Server server = new Server(8080);
 
 		ServletContextHandler servlet = new ServletContextHandler(
 				ServletContextHandler.SESSIONS);

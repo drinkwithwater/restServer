@@ -1,0 +1,8 @@
+
+{
+	"modules":[
+		"restlet.RestApiServer",
+		],
+
+	"attention":"The configuration function does not support class extend "
+}

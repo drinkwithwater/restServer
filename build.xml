@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
-<project name="orion" default="main" >
+<project name="restServer" default="main" >
   <patternset id="lib">
     <include name="jetty-all-7.jar"/>
     <include name="servlet-api-2.5.jar"/>
+    <include name="httpcomponents-asyncclient-4.0.2.jar"/>
+	<include name="org.json.jar"/>
   </patternset>
   <path id="classpath">
     <fileset dir="lib">
@@ -15,9 +17,17 @@
     <javac srcdir="src" destdir="target/classes" classpathref="classpath"/>
   </target>
   <target name="main" depends="compile">
-    <jar destfile="target/root.jar" basedir="target/classes">
+    <jar destfile="target/client.jar" basedir="target/classes">
       <manifest>
-		<attribute name="Main-class" value="main.WebServlet"/>
+		<attribute name="Main-class" value="client.AsyncClient"/>
+      </manifest>
+      <zipgroupfileset dir="lib/">
+        <patternset refid="lib"/>
+      </zipgroupfileset>
+    </jar>
+    <jar destfile="target/server.jar" basedir="target/classes">
+      <manifest>
+		<attribute name="Main-class" value="server.WebServlet"/>
       </manifest>
       <zipgroupfileset dir="lib/">
         <patternset refid="lib"/>

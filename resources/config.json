@@ -1,7 +1,8 @@
-
 {
 	"modules":[
 		"restlet.RestApiServer",
+		"distribute.DistributeServer",
+		"distribute.TopicManager",
 		],
 
 	"attention":"The configuration function does not support class extend "

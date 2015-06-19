@@ -14,7 +14,7 @@ public class Main {
         System.setProperty("org.restlet.engine.loggerFacadeClass", 
                 "org.restlet.ext.slf4j.Slf4jLoggerFacade");
 
-		String configFileName="src/main/resources/config.json";
+		String configFileName="resources/config.json";
 		if(args.length>0){
 			File f=new File(args[0]);
 			if(f.exists()&&f.isFile()){

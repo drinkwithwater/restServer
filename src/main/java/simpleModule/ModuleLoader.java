@@ -28,8 +28,15 @@ public class ModuleLoader {
     	classSet=new HashSet<Class<? extends IModule>>();
     	moduleContext=new ModuleContext();
     }
+    public void configFromFile(String fileName) throws ClassNotFoundException, IOException, JSONException{
+    	if(fileName.lastIndexOf(".json")==fileName.length()-5){
+    		this.configFromJSONFile(fileName);
+    	}else if(fileName.lastIndexOf(".xml")==fileName.length()-4){
+    		this.configFromXMLFile(fileName);
+    	}
+    }
     @SuppressWarnings("unchecked")
-	public void configFromFile(String fileName) throws IOException, JSONException, ClassNotFoundException{
+	public void configFromJSONFile(String fileName) throws IOException, JSONException, ClassNotFoundException{
     	File file=new File(fileName);
     	FileInputStream fileStream=new FileInputStream(file);
     	BufferedReader reader=new BufferedReader(new InputStreamReader(fileStream));
@@ -69,6 +76,12 @@ public class ModuleLoader {
 
     	reader.close();
     }
+    @SuppressWarnings("unchecked")
+	public void configFromXMLFile(String fileName) throws IOException, JSONException, ClassNotFoundException{
+    	//TODO
+    	throw new IOException();
+    }
+
     public void start() throws InstantiationException, IllegalAccessException{
 
     	//new intance
@@ -99,10 +112,5 @@ public class ModuleLoader {
     	loader.configFromFile("resources/config.json");
     	loader.start();
     	loader.getContext().getServiceImpl(IRestApiService.class).run();
-
-
-    	/*
-    	System.out.println(file.isFile());
-    	System.out.println(System.getProperties());*/
     }
 }

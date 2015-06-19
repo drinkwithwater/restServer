@@ -33,11 +33,13 @@ public class RestApiServer
     implements IModule, IRestApiService {
 	
 	
-	public static Logger logger=LoggerFactory.getLogger("RestApiServer");
+	public static Logger logger=LoggerFactory.getLogger(RestApiServer.class);
     
     protected List<RestletRoutable> restlets;
 
     protected int restPort = 7080;
+
+    protected ModuleContext moContext;
     
     // ***********
     // Application
@@ -78,7 +80,7 @@ public class RestApiServer
             return slashFilter;
         }
         
-        public void run(Object obj, String restHost, int restPort) {
+        public void run(ModuleContext moContext, String restHost, int restPort) {
             setStatusService(new StatusService() {
                 @Override
                 public Representation getRepresentation(Status status,
@@ -89,8 +91,11 @@ public class RestApiServer
                 }                
             });
             
-            context.getAttributes().put("obj", obj);
             
+            for (Class<? extends ISimpleService> s : moContext.getAllServices()) {
+                    logger.info("Adding "+s.getCanonicalName()+" for service {} into context" +moContext.getServiceImpl(s).toString());
+                context.getAttributes().put(s.getCanonicalName(), moContext.getServiceImpl(s));
+            }
             // Start listening for REST requests
             try {
                 final Component component = new Component();
@@ -130,7 +135,7 @@ public class RestApiServer
     	logger.info(sb.toString());
         
         RestApplication restApp = new RestApplication();
-        restApp.run("objval", null, restPort);
+        restApp.run(moContext, null, restPort);
     }
     
     // *****************
@@ -152,6 +157,7 @@ public class RestApiServer
         // This has to be done here since we don't know what order the
         // startUp methods will be called
         this.restlets = new ArrayList<RestletRoutable>();
+        this.moContext=context;
         
         // read our config options
         logger.info("REST port set to "+this.restPort);
@@ -163,7 +169,6 @@ public class RestApiServer
     	//this.addRestletRoutable(new FileRoutable());
     }
     public static void main(String args[]){
-    	System.out.println("test loader");
     	RestApiServer rs=new RestApiServer();
     	rs.init(null);
     	rs.run();
